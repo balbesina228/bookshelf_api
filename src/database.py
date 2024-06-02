@@ -1,8 +1,11 @@
-from sqlalchemy import create_engine
+import sqlalchemy.exc
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:12345@localhost/db_bookshelf"
+db_name = "db_bookshelf"
+
+SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:12345@localhost:5432/{db_name}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
