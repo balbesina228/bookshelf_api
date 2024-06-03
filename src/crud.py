@@ -26,6 +26,29 @@ def create_author(db: Session, author: schemas.AuthorCreate):
     return db_author
 
 
+def update_author(db: Session, author_id: UUID, author: schemas.AuthorUpdate):
+    db_author = get_author(db, author_id)
+    if not db_author:
+        return None
+
+    update_data = author.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_author, key, value)
+
+    db.commit()
+    db.refresh(db_author)
+    return db_author
+
+
+def delete_author(db: Session, author_id: UUID):
+    db_author = get_author(db, author_id)
+    if not db_author:
+        return None
+    db.delete(db_author)
+    db.commit()
+    return {"message": f"Author with ID {author_id} deleted successfully."}
+
+
 def get_books(db: Session, skip: int = 0, limit: int = 50):
     return db.query(models.Book).offset(skip).limit(limit).all()
 
@@ -45,3 +68,26 @@ def create_book(db: Session, book: schemas.BookCreate):
     db.commit()
     db.refresh(db_book)
     return db_book
+
+
+def update_book(db: Session, book_id: UUID, book: schemas.BookUpdate):
+    db_book = get_book(db, book_id)
+    if not db_book:
+        return None
+
+    update_data = book.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_book, key, value)
+
+    db.commit()
+    db.refresh(db_book)
+    return db_book
+
+
+def delete_book(db: Session, book_id: UUID):
+    db_book = get_book(db, book_id)
+    if not db_book:
+        return None
+    db.delete(db_book)
+    db.commit()
+    return {"message": f"Book with ID {book_id} deleted successfully."}

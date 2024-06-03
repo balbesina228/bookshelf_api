@@ -1,7 +1,7 @@
 from uuid import UUID
 
 import sqlalchemy.exc
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from . import crud
@@ -41,6 +41,22 @@ def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
     return new_author
 
 
+@app.put("/authors/{author_id}", response_model=schemas.Author)
+def update_author(author_id: UUID, author: schemas.AuthorUpdate, db: Session = Depends(get_db)):
+    db_author = crud.update_author(db, author_id=author_id, author=author)
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return db_author
+
+
+@app.delete("/authors/{author_id}")
+def delete_author(author_id: UUID, db: Session = Depends(get_db)):
+    author = crud.delete_author(db, author_id)
+    if author is None:
+        return HTTPException(status_code=400, detail="Author with the specified ID not found")
+    return Response(status_code=204)
+
+
 @app.get("/books", response_model=list[schemas.Book])
 def read_books(db: Session = Depends(get_db)):
     books = crud.get_books(db)
@@ -62,3 +78,19 @@ def create_book(book: schemas.BookCreate, db: Session = Depends(get_db)):
     except sqlalchemy.exc.IntegrityError:
         raise HTTPException(status_code=400, detail="Author with the specified ID not found")
     return new_book
+
+
+@app.put("/books/{book_id}", response_model=schemas.Book)
+def update_book(book_id: UUID, author_id: UUID, book: schemas.BookUpdate, db: Session = Depends(get_db)):
+    db_book = crud.update_book(db, book_id=book_id, book=book)
+    if db_book is None:
+        raise HTTPException(status_code=404, detail="Book with the specified ID not found")
+    return db_book
+
+
+@app.delete("/books/{book_id}")
+def delete_book(book_id: UUID, db: Session = Depends(get_db)):
+    book = crud.delete_book(db, book_id)
+    if book is None:
+        return HTTPException(status_code=400, detail="Book with the specified ID not found")
+    return Response(status_code=204)
