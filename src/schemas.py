@@ -6,11 +6,13 @@ from pydantic import BaseModel
 
 class BookBase(BaseModel):
     title: str
+    summary: str
+    published_date: datetime.datetime
+    author_id: UUID
 
 
 class Book(BookBase):
     id: UUID
-    author_id: UUID
 
     class Config:
         orm_mode = True
