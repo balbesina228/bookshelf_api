@@ -2,20 +2,20 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from . import models
-from . import schemas
+from .models import BookModel, AuthorModel
+from .schemas import BookCreate, BookUpdate, AuthorCreate, AuthorUpdate
 
 
 def get_authors(db: Session, skip: int = 0, limit: int = 30):
-    return db.query(models.Author).offset(skip).limit(limit).all()
+    return db.query(AuthorModel).offset(skip).limit(limit).all()
 
 
 def get_author(db: Session, author_id: UUID):
-    return db.query(models.Author).filter(models.Author.id == author_id).first()
+    return db.query(AuthorModel).filter(AuthorModel.id == author_id).first()
 
 
-def create_author(db: Session, author: schemas.AuthorCreate):
-    db_author = models.Author(
+def create_author(db: Session, author: AuthorCreate):
+    db_author = AuthorModel(
         name=author.name,
         biography=author.biography,
         birthdate=author.birthdate
@@ -26,7 +26,7 @@ def create_author(db: Session, author: schemas.AuthorCreate):
     return db_author
 
 
-def update_author(db: Session, author_id: UUID, author: schemas.AuthorUpdate):
+def update_author(db: Session, author_id: UUID, author: AuthorUpdate):
     db_author = get_author(db, author_id)
     if not db_author:
         return None
@@ -50,15 +50,15 @@ def delete_author(db: Session, author_id: UUID):
 
 
 def get_books(db: Session, skip: int = 0, limit: int = 50):
-    return db.query(models.Book).offset(skip).limit(limit).all()
+    return db.query(BookModel).offset(skip).limit(limit).all()
 
 
 def get_book(db: Session, book_id: UUID):
-    return db.query(models.Book).filter(models.Book.id == book_id).first()
+    return db.query(BookModel).filter(BookModel.id == book_id).first()
 
 
-def create_book(db: Session, book: schemas.BookCreate):
-    db_book = models.Book(
+def create_book(db: Session, book: BookCreate):
+    db_book = BookModel(
         title=book.title,
         summary=book.summary,
         published_date=book.published_date,
@@ -70,7 +70,7 @@ def create_book(db: Session, book: schemas.BookCreate):
     return db_book
 
 
-def update_book(db: Session, book_id: UUID, book: schemas.BookUpdate):
+def update_book(db: Session, book_id: UUID, book: BookUpdate):
     db_book = get_book(db, book_id)
     if not db_book:
         return None
