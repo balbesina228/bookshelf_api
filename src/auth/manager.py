@@ -1,10 +1,8 @@
-from typing import Optional, Annotated
+from typing import Optional
 from uuid import UUID
 
-from fastapi import Depends, Request, Form
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi_users import BaseUserManager, UUIDIDMixin, models, exceptions
-from pydantic import EmailStr
+from fastapi import Depends, Request
+from fastapi_users import BaseUserManager, UUIDIDMixin
 
 from config import SECRET_KEY
 from .database import User, get_user_db

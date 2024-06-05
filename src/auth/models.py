@@ -2,9 +2,9 @@ import uuid
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
 from sqlalchemy import Column, String, Boolean, UUID
-from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
+from sqlalchemy.orm import declarative_base, DeclarativeMeta
 
-Base: DeclarativeMeta = declarative_base()
+from ..models.models import Base
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
