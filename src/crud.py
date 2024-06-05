@@ -1,32 +1,35 @@
 from uuid import UUID
 
-from sqlalchemy.orm import Session
+from sqlalchemy.future import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import BookModel, AuthorModel
 from .schemas import BookCreate, BookUpdate, AuthorCreate, AuthorUpdate
 
 
-def get_authors(db: Session, skip: int = 0, limit: int = 30):
-    return db.query(AuthorModel).offset(skip).limit(limit).all()
+async def get_authors(db: AsyncSession, skip: int = 0, limit: int = 30):
+    result = await db.execute(select(AuthorModel).offset(skip).limit(limit))
+    return result.scalars().all()
 
 
-def get_author(db: Session, author_id: UUID):
-    return db.query(AuthorModel).filter(AuthorModel.id == author_id).first()
+async def get_author(db: AsyncSession, author_id: UUID):
+    result = await db.execute(select(AuthorModel).filter(AuthorModel.id == author_id))
+    return result.scalars().first()
 
 
-def create_author(db: Session, author: AuthorCreate):
+async def create_author(db: AsyncSession, author: AuthorCreate):
     db_author = AuthorModel(
         name=author.name,
         biography=author.biography,
         birthdate=author.birthdate
     )
     db.add(db_author)
-    db.commit()
-    db.refresh(db_author)
+    await db.commit()
+    await db.refresh(db_author)
     return db_author
 
 
-def update_author(db: Session, author_id: UUID, author: AuthorUpdate):
+async def update_author(db: AsyncSession, author_id: UUID, author: AuthorUpdate):
     db_author = get_author(db, author_id)
     if not db_author:
         return None
@@ -35,29 +38,31 @@ def update_author(db: Session, author_id: UUID, author: AuthorUpdate):
     for key, value in update_data.items():
         setattr(db_author, key, value)
 
-    db.commit()
-    db.refresh(db_author)
+    await db.commit()
+    await db.refresh(db_author)
     return db_author
 
 
-def delete_author(db: Session, author_id: UUID):
+async def delete_author(db: AsyncSession, author_id: UUID):
     db_author = get_author(db, author_id)
     if not db_author:
         return None
-    db.delete(db_author)
-    db.commit()
+    await db.delete(db_author)
+    await db.commit()
     return {"message": f"Author with ID {author_id} deleted successfully."}
 
 
-def get_books(db: Session, skip: int = 0, limit: int = 50):
-    return db.query(BookModel).offset(skip).limit(limit).all()
+async def get_books(db: AsyncSession, skip: int = 0, limit: int = 50):
+    result = await db.execute(select(BookModel).offset(skip).limit(limit))
+    return result.scalars().all()
 
 
-def get_book(db: Session, book_id: UUID):
-    return db.query(BookModel).filter(BookModel.id == book_id).first()
+async def get_book(db: AsyncSession, book_id: UUID):
+    result = await db.execute(select(BookModel).filter(BookModel.id == book_id))
+    return result.scalars().first()
 
 
-def create_book(db: Session, book: BookCreate):
+async def create_book(db: AsyncSession, book: BookCreate):
     db_book = BookModel(
         title=book.title,
         summary=book.summary,
@@ -65,12 +70,12 @@ def create_book(db: Session, book: BookCreate):
         author_id=book.author_id
     )
     db.add(db_book)
-    db.commit()
-    db.refresh(db_book)
+    await db.commit()
+    await db.refresh(db_book)
     return db_book
 
 
-def update_book(db: Session, book_id: UUID, book: BookUpdate):
+async def update_book(db: AsyncSession, book_id: UUID, book: BookUpdate):
     db_book = get_book(db, book_id)
     if not db_book:
         return None
@@ -79,15 +84,15 @@ def update_book(db: Session, book_id: UUID, book: BookUpdate):
     for key, value in update_data.items():
         setattr(db_book, key, value)
 
-    db.commit()
-    db.refresh(db_book)
+    await db.commit()
+    await db.refresh(db_book)
     return db_book
 
 
-def delete_book(db: Session, book_id: UUID):
+async def delete_book(db: AsyncSession, book_id: UUID):
     db_book = get_book(db, book_id)
     if not db_book:
         return None
-    db.delete(db_book)
-    db.commit()
+    await db.delete(db_book)
+    await db.commit()
     return {"message": f"Book with ID {book_id} deleted successfully."}
