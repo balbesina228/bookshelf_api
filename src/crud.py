@@ -30,7 +30,7 @@ async def create_author(db: AsyncSession, author: AuthorCreate):
 
 
 async def update_author(db: AsyncSession, author_id: UUID, author: AuthorUpdate):
-    db_author = get_author(db, author_id)
+    db_author = await get_author(db=db, author_id=author_id)
     if not db_author:
         return None
 
@@ -44,7 +44,7 @@ async def update_author(db: AsyncSession, author_id: UUID, author: AuthorUpdate)
 
 
 async def delete_author(db: AsyncSession, author_id: UUID):
-    db_author = get_author(db, author_id)
+    db_author = await get_author(db=db, author_id=author_id)
     if not db_author:
         return None
     await db.delete(db_author)
@@ -76,7 +76,7 @@ async def create_book(db: AsyncSession, book: BookCreate):
 
 
 async def update_book(db: AsyncSession, book_id: UUID, book: BookUpdate):
-    db_book = get_book(db, book_id)
+    db_book = await get_book(db=db, book_id=book_id)
     if not db_book:
         return None
 
@@ -90,7 +90,7 @@ async def update_book(db: AsyncSession, book_id: UUID, book: BookUpdate):
 
 
 async def delete_book(db: AsyncSession, book_id: UUID):
-    db_book = get_book(db, book_id)
+    db_book = await get_book(db=db, book_id=book_id)
     if not db_book:
         return None
     await db.delete(db_book)

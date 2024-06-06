@@ -26,7 +26,7 @@ async def read_author(
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
 ):
-    author = await crud.get_author(db, author_id=author_id)
+    author = await crud.get_author(db=db, author_id=author_id)
     if author is None:
         raise HTTPException(status_code=404, detail="Author not found")
     return author
@@ -49,7 +49,7 @@ async def update_author(
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
 ):
-    db_author = update_author(db, author_id=author_id, author=author)
+    db_author = update_author(db=db, author_id=author_id, author=author)
     if db_author is None:
         raise HTTPException(status_code=404, detail="Author not found")
     return db_author
@@ -61,7 +61,7 @@ async def delete_author(
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
 ):
-    author = await crud.delete_author(db, author_id)
+    author = await crud.delete_author(db=db, author_id=author_id)
     if author is None:
         return HTTPException(status_code=400, detail="Author with the specified ID not found")
     return Response(status_code=204)
