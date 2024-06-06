@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from .auth.auth import auth_backend, fastapi_users
-from .auth.schemas import UserRead, UserCreate
-from .routers import book_router, author_router
+from src.auth.auth import auth_backend, fastapi_users
+from src.auth.schemas import UserRead, UserCreate
+from src.routers import book_router, author_router
 
 app = FastAPI()
 
@@ -20,3 +20,8 @@ app.include_router(
     prefix="/auth",
     tags=["auth"]
 )
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
