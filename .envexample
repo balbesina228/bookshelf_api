@@ -1,6 +1,0 @@
-SECRET_KEY="secret"
-DB_NAME="db_bookshelf"
-DB_USER="user"
-DB_PASSWORD="password"
-DB_HOST="localhost"
-DB_PORT="5432"
