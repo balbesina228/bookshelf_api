@@ -1,10 +1,7 @@
 #!/bin/bash
-# exit immediately if a command exits with a non-zero status
-set -e
-
 
 # Run migrations
-alembic upgrade head
+alembic upgrade b38cdb8e0489
 
 # Start the application
 exec "$@"

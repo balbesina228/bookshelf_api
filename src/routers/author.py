@@ -11,7 +11,7 @@ from ..schemas.author import Author, AuthorCreate, AuthorUpdate
 router = APIRouter()
 
 
-@router.get("/", response_model=list[Author])
+@router.get("/")
 async def read_authors(
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
@@ -20,7 +20,7 @@ async def read_authors(
     return authors
 
 
-@router.get("/{author_id}", response_model=Author)
+@router.get("/{author_id}")
 async def read_author(
         author_id: UUID,
         db: AsyncSession = Depends(get_db),
@@ -32,7 +32,7 @@ async def read_author(
     return author
 
 
-@router.post("/", response_model=Author)
+@router.post("/")
 async def create_author(
         author: AuthorCreate,
         db: AsyncSession = Depends(get_db),
@@ -42,7 +42,7 @@ async def create_author(
     return new_author
 
 
-@router.put("/{author_id}", response_model=Author)
+@router.put("/{author_id}")
 async def update_author(
         author_id: UUID,
         author: AuthorUpdate,
