@@ -49,7 +49,7 @@ async def update_author(
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
 ):
-    db_author = update_author(db=db, author_id=author_id, author=author)
+    db_author = await crud.update_author(db=db, author_id=author_id, author=author)
     if db_author is None:
         raise HTTPException(status_code=404, detail="Author not found")
     return db_author
