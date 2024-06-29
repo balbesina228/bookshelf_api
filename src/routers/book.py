@@ -49,7 +49,6 @@ async def create_book(
 @router.put("/{book_id}", response_model=Book)
 async def update_book(
         book_id: UUID,
-        author_id: UUID,
         book: BookUpdate,
         db: AsyncSession = Depends(get_db),
         user=Depends(current_active_user)
