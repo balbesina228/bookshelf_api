@@ -15,7 +15,13 @@ async def auth_login_set_cookie(
         db: AsyncSession = Depends(get_async_session)
 ):
     session = await crud.generate_cookie(db, cookie)
-    response.set_cookie(session.username, session.id)
+    response.set_cookie(
+        session.username,
+        session.id,
+        httponly=True,
+        max_age=None,
+        expires=None
+    )
 
     return session
 
