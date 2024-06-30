@@ -3,8 +3,10 @@ from uuid import UUID
 from fastapi import Depends, HTTPException, Response, APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..auth.auth import current_active_user
+
+# from ..auth.auth import current_active_user
 from .. import crud
+from ..auth.database import get_session_data
 from ..dependencies import get_db
 from ..schemas.author import Author, AuthorCreate, AuthorUpdate
 
@@ -14,7 +16,7 @@ router = APIRouter()
 @router.get("/")
 async def read_authors(
         db: AsyncSession = Depends(get_db),
-        user=Depends(current_active_user)
+        user=Depends(get_session_data)
 ):
     authors = await crud.get_authors(db)
     return authors
@@ -24,7 +26,7 @@ async def read_authors(
 async def read_author(
         author_id: UUID,
         db: AsyncSession = Depends(get_db),
-        user=Depends(current_active_user)
+        user=Depends(get_session_data)
 ):
     author = await crud.get_author(db=db, author_id=author_id)
     if author is None:
@@ -36,7 +38,7 @@ async def read_author(
 async def create_author(
         author: AuthorCreate,
         db: AsyncSession = Depends(get_db),
-        user=Depends(current_active_user)
+        user=Depends(get_session_data)
 ):
     new_author = await crud.create_author(db, author)
     return new_author
@@ -47,7 +49,7 @@ async def update_author(
         author_id: UUID,
         author: AuthorUpdate,
         db: AsyncSession = Depends(get_db),
-        user=Depends(current_active_user)
+        user=Depends(get_session_data)
 ):
     db_author = await crud.update_author(db=db, author_id=author_id, author=author)
     if db_author is None:
@@ -59,7 +61,7 @@ async def update_author(
 async def delete_author(
         author_id: UUID,
         db: AsyncSession = Depends(get_db),
-        user=Depends(current_active_user)
+        user=Depends(get_session_data)
 ):
     author = await crud.delete_author(db=db, author_id=author_id)
     if author is None:

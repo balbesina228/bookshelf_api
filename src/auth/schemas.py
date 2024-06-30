@@ -1,11 +1,17 @@
+from pydantic import BaseModel
 from uuid import UUID
 
-from fastapi_users import schemas
+
+class CookieBase(BaseModel):
+    pass
 
 
-class UserRead(schemas.BaseUser[UUID]):
-    username: str
+class Cookie(CookieBase):
+    id: UUID
+
+    class Config:
+        orm_mode = True
 
 
-class UserCreate(schemas.BaseUserCreate):
+class CookieCreate(CookieBase):
     username: str
